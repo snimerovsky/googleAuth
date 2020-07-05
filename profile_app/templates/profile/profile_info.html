@@ -1,0 +1,89 @@
+{% extends "index.html" %} {% load widget_tweaks %} {% load maths %} {% block content %}
+<div class="container-fluid ">
+  <h1 class="h3 mb-2 text-gray-800">Profile</h1>
+
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-xs-12 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Optima Group</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">optimagp66@gmail.com</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-comments fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-12">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+          Telegram
+        </h6>
+      </div>
+      <div class="card-body">
+        <form action="{% url 'profile' %}" method="post">
+          {% csrf_token %}
+          {% render_field form.telegram class+="form-control mb-3" placeholder="Telegram" value=profile_data_user.telegram %}
+          <input type="submit" value="Save" class="btn btn-primary">
+      </form>
+      </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary" data-toggle="tooltip" data-placement="top" title="We are just testing financial model, so if you want additional futures for money - just tell us">
+            Subscription
+          </h6>
+        </div>
+        <div class="card-body">
+            <span
+            class="badge badge-info text-wrap"
+            style="padding: 15px; font-size: .9rem;"
+            >You are in a demo version. It ends at 17.07.2020</span
+          >
+          <h1 class="h4 mt-4 text-gray-800">Dragon level 1 access</h1>
+          <div class="table-responsive">
+            <table
+              class="table table-bordered"
+              width="100%"
+              cellspacing="0"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">1 month</th>
+                  <th scope="col">3 month</th>
+                  <th scope="col">6 months</th>
+                  <th scope="col">1 year</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>19 usd</td>
+                  <td>17 usd/m total = 45 usd</td>
+                  <td>15 usd/m</td>
+                  <td>10 usd/month</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h1 class="h4 mt-3 text-gray-800">Elder dragon access</h1>
+          <p>*Our team adds functions according to your need. Backtest, differrent strategies automatic algo trading and whatever you can imaging contact us to negotiate the details.</p>
+          <p><div>Right now we accept payments manually with</div>
+
+            <div>- btc, usdt, eth and other cryptocurrencies</div>
+            <div>- Paypal</div>
+            <div>- fiat money through 3d party provider paysend.com/</div>
+          </p>
+            <p>To get access and pay please write to telegram:  @payments_coins  or to whatsapp: +393397183</p>
+            <p>For any help visit our telegram group @coinsdragons</p>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}

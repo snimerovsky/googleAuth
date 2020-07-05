@@ -1,0 +1,251 @@
+{% extends "index.html" %} {% load maths %} 
+
+{% block content %}
+<div class="container-fluid">
+  {% if exchanges_length <= 0 %}
+    <h1 class="h3 mb-2 text-gray-800">History</h1>
+    <p class="text-center">You have not history yet</p>
+  {% else %}
+    <h1 class="h3 mb-2 text-gray-800">History <span id="from" class="badge badge-pill badge-success">00.00.0000</span> - <span id="to" class="badge badge-pill badge-success">00.00.0000</span></h1>
+  <div class="filter filter-basic mt-3 mb-4">
+    <div class="filter-nav">
+      <button
+        class="btn btn-outline-primary btn-sm active"
+        name="filterBtn"
+        id="all"
+      >
+        All time
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm ml-4"
+        name="filterBtn"
+        id="week"
+      >
+        This week
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        name="filterBtn"
+        id="month"
+      >
+        This month
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        name="filterBtn"
+        id="thirty"
+      >
+        Last 30 days
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm ml-4"
+        data-toggle="datepicker"
+        id="from_date"
+        name="filterBtn"
+      >
+        From
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        data-toggle="datepicker"
+        id="to_date"
+        name="filterBtn"
+      >
+        To
+      </button>
+    </div>
+    <div class="mt-3">
+      {% for exchange in profile_data|get_exchanges_details %}
+        <div class="custom-control custom-checkbox mr-sm-2">
+          <input type="checkbox" class="custom-control-input" id="{{exchange|get_item:'name'}}-checkbox-filter" name="switch-exchanges-chart" data-id="{{exchange|get_item:'id'}}" checked />
+          <label class="custom-control-label" for="{{exchange|get_item:'name'}}-checkbox-filter" data-nameLabel="{{exchange|get_item:'name'}}" data-idLabel="{{exchange|get_item:'id'}}">{{exchange|get_item:'name'}}</label>
+        </div>
+      {% endfor%}
+    </div>
+    <button class="btn btn-success mt-3" onclick="applyFiltersHistory()">
+      <span class="text">Apply</span>
+    </button>
+  </div>
+  <div class="row mt-4">
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-4 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div
+                class="text-xs font-weight-bold text-success text-uppercase mb-1"
+              >
+                Total <span id="from"></span>
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <span id="total-BTC-value-from">0</span> BTC = $<span
+                  id="total-USDT-value-from"
+                  >0</span
+                >
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div
+                  class="text-xs font-weight-bold text-success text-uppercase mb-1"
+                >
+                  Total <span id="to"></span>
+                </div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                  <span id="total-BTC-value-to">0</span> BTC = $<span
+                    id="total-USDT-value-to"
+                    >0</span
+                  >
+                </div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="card shadow mb-4 mt-3">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        DataTable <span id="from"></span>
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="text-center mb-4" id="InitialLoaderFromDataTable" style="display: block;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div class="table-responsive" id="dataTableResponsiveFrom" style="display: none;">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col">Exchange</th>
+              <th scope="col">Total BTC</th>
+              <th scope="col">Total USDT</th>
+              <th scope="col">PNL BTC</th>
+              <th scope="col">PNL USDT</th>
+            </tr>
+          </thead>
+          <tbody id="dataTableFrom"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="card shadow mb-4 mt-3">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        DataTable <span id="to"></span>
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="text-center mb-4" id="InitialLoaderToDataTable" style="display: block;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div class="table-responsive" id="dataTableResponsiveTo" style="display: none;">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col">Exchange</th>
+              <th scope="col">Total BTC</th>
+              <th scope="col">Total USDT</th>
+              <th scope="col">PNL BTC</th>
+              <th scope="col">PNL USDT</th>
+            </tr>
+          </thead>
+          <tbody id="dataTableTo"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Asset allocation <span id="from"></span> </h6>
+        </div>
+        <div class="card-body">
+          <div
+            class="text-center"
+            id="assetAllocationLoaderFrom"
+            style="display: block;"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div
+            id="assetAllocationChartFrom"
+            style="width: 100%; height: 100%;"
+          ></div>
+        </div>
+      </div>
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Asset allocation <span id="to"></span></h6>
+        </div>
+        <div class="card-body">
+          <div
+            class="text-center"
+            id="assetAllocationLoaderTo"
+            style="display: block;"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div
+            id="assetAllocationChartTo"
+            style="width: 100%; height: 100%;"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h1 class="h3 mb-2 text-gray-800">Details <span id="from"></span> </h1>
+  <div class="mb-4" name="radiosFrom"></div>
+  {% for exchange in profile_data|get_exchanges_details %}
+    <div class="{{exchange|get_item:'id'}}From-tableBox" style="display:none" data-id="{{exchange|get_item:'id'}}" name="tableFrom">
+        <div class="text-center mb-4" id="{{exchange|get_item:'id'}}InitialLoaderFrom" style="display: block;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+    </div>
+  {% endfor%}
+  <h1 class="h3 mb-2 text-gray-800">Details <span id="to"></span> </h1>
+  <div class="mb-4" name="radiosTo"></div>
+  {% for exchange in profile_data|get_exchanges_details %}
+    <div class="{{exchange|get_item:'id'}}To-tableBox" style="display:none" data-id="{{exchange|get_item:'id'}}" name="tableTo">
+        <div class="text-center mb-4" id="{{exchange|get_item:'id'}}InitialLoaderTo" style="display: block;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+    </div>
+  {% endfor%}
+</div>
+  {% endif %}
+{% endblock %}
+
+{% if exchanges_length > 0 %}
+  {% load static %}
+  {% block script %}
+    <script src="{% static 'js/get_history.js' %}"></script>
+  {% endblock script %}
+{% endif %}

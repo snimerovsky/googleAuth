@@ -1,0 +1,73 @@
+{% extends "index.html" %} {% load widget_tweaks %} {% block content %}
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div class="col-12">
+        <div class="card shadow mb-4 mt-3">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">
+                DataTable
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Exchange</th>
+                      <th scope="col">Coin</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Total</th>
+                      <th scope="col">Available</th>
+                      <th scope="col">In order</th>
+                      <th scope="col">BTC value</th>
+                      <th scope="col">USDT value</th>
+                      <th scope="col">PNL BTC</th>
+                      <th scope="col">PNL USDT</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Binance spot</th>
+                      <td>btc</td>
+                      <td>bitcoin</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Binance margin</th>
+                        <td>btc</td>
+                        <td>bitcoin</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bitmex</th>
+                        <td>btc</td>
+                        <td>bitcoin</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

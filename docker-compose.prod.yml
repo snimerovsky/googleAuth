@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+  db:
+    image: postgres:10.1-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  web:
+    build: .
+    restart: on-failure
+    env_file:
+      - ./.env
+    command: gunicorn --bind 0.0.0.0:8002 google_auth.wsgi
+    ports:
+      - "8002:8002"
+    depends_on:
+      - nginx
+  nginx:
+    image: "nginx"
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./staticfiles:/static
+      - ./mediafiles:/media
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+volumes:
+  postgres_data:

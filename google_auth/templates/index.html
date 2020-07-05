@@ -1,0 +1,251 @@
+{% load static %} {% load maths %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    {% if user.is_anonymous %}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/index.css' %}"
+    />
+    {% endif %}
+    <link
+      href="{% static 'vendor/fontawesome-free/css/all.min.css' %}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="{% static 'css/datepicker.min.css' %}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/highcharts.css' %}" />
+
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/profile.css' %}"
+    />
+
+    <style>
+      input.highcharts-range-selector:focus {
+        border: none !important;
+      }
+      .custom-select:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      .table-checkbox {
+        margin-left: 20px;
+        margin-bottom: 3px;
+      }
+      .dataTables_length {
+        display: flex;
+        align-items: center;
+      }
+    </style>
+    <title>Google auth</title>
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <ul
+        class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+        id="accordionSidebar"
+      >
+        <!-- Sidebar - Brand -->
+        <a
+          class="sidebar-brand d-flex align-items-center justify-content-center"
+          href="/"
+        >
+          <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+          </div>
+          <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0" />
+        <li class="nav-item active">
+          <a class="nav-link" href="/exchanges/add_exchange">
+            <span>Exchanges</span>
+            <i class="fas fa fa-plus-square pl-1"></i
+          ></a>
+        </li>
+        <hr class="sidebar-divider" />
+        {% if profile_data %}
+        <div class="sidebar-heading">
+          Your exchanges
+        </div>
+        <!-- Nav Item - Charts -->
+        {% for exchange in profile_data %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'exchange_url' exchange.id %}">
+            <!-- <i class="fas fa-fw fa-chart-area"></i> -->
+            <span>{{ exchange|get_name }}</span></a
+          >
+        </li>
+        {% endfor %}
+        <!-- Divider -->
+        <hr class="sidebar-divider" />
+        {% endif %}
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+      </ul>
+      <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+          <nav
+            class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
+          >
+            <!-- Sidebar Toggle (Topbar) -->
+            <button
+              id="sidebarToggleTop"
+              class="btn btn-link d-md-none rounded-circle mr-3"
+            >
+              <i class="fa fa-bars"></i>
+            </button>
+
+            <span
+              class="d-none badge badge-info text-wrap p-2 d-sm-inline-block"
+              >You are in a demo version. It ends at 17.07.2020</span
+            >
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown no-arrow mx-1">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="/"
+                  id="alertsDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <div
+                    class="btn btn-primary btn-icon-split btn-sm navbar-nav ml-auto"
+                  >
+                    <span
+                      class="icon text-white-50"
+                      style="padding-right: 20px;"
+                    >
+                      <i class="fas fa fa-unlock-alt"></i>
+                    </span>
+                    <span class="text">Buy full access</span>
+                  </div>
+                </a>
+              </li>
+              <div class="topbar-divider d-none d-sm-block"></div>
+
+              <!-- Nav Item - User Information -->
+              <li class="nav-item dropdown no-arrow">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                    >{{ user.socialaccount_set.all.0.extra_data.email }}</span
+                  >
+                  <img
+                    class="img-profile rounded-circle"
+                    src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                  />
+                </a>
+                <!-- Dropdown - User Information -->
+                <div
+                  class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                  aria-labelledby="userDropdown"
+                >
+                  <a class="dropdown-item" href="/profile">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profile
+                  </a>
+                  <a class="dropdown-item" href="/history">
+                    <i
+                      class="fas fa-history fa-sm fa-fw mr-2 text-gray-400"
+                    ></i>
+                    History
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/accounts/logout/" next="/">
+                    <i
+                      class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
+                    ></i>
+                    Logout
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </nav>
+
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/libraries/datepicker.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <script src="{% static 'js/libraries/sb-admin-2.min.js' %}"></script>
+
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <script>
+      $('[data-toggle="datepicker"]').datepicker();
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        let ckeckbox = $(`#${settings.sInstance}HideLowBalance:checked`);
+        let usd = parseFloat(data[6]);
+        if (ckeckbox.length) {
+          if (usd >= 10) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        return true;
+      });
+    </script>
+
+    <script src="{% static 'js/classes/Utils.js' %}"></script>
+    <script src="{% static 'js/libraries/highstock.js' %}"></script>
+    <script src="{% static 'js/classes/Chart.js' %}"></script>
+    <script src="{% static 'js/classes/Exchange.js' %}"></script>
+    <script src="{% static 'js/classes/Binance.js' %}"></script>
+    <script src="{% static 'js/classes/Bitmex.js' %}"></script>
+    <script src="{% static 'js/classes/History.js' %}"></script>
+
+    {% block script %} {% endblock script %}
+  </body>
+</html>

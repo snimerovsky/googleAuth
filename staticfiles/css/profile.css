@@ -1,0 +1,70 @@
+.auth_box {
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 40px 60px 60px 60px;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+.btn-google {
+  background-color: #dd4b39;
+  color: white;
+}
+
+.btn-google:hover {
+  color: white;
+}
+
+.icon {
+  width: 20px;
+  margin-right: 5px;
+}
+
+.avatar {
+  width: 100px;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 10px 20px 0 rgba(155, 155, 155, 0.2);
+  box-shadow: 0 10px 20px 0 rgba(155, 155, 155, 0.2);
+}
+
+.avatar_title {
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 1rem;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 50px;
+  padding-top: 2.1rem;
+}
+
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.btn-blue-shadow {
+  background-color: #56baed;
+  border: none;
+  color: white !important;
+  font-weight: 600;
+  padding: 15px 80px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin-top: 1.5rem;
+  -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
+  box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}

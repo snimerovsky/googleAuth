@@ -1,0 +1,214 @@
+{% extends "index.html" %} {% load maths %} 
+
+{% block content %}
+<div class="container-fluid">
+  <h1 class="h3 mb-2 text-gray-800">Main page</h1>
+
+  <div class="row mt-4">
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-4 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div
+                class="text-xs font-weight-bold text-success text-uppercase mb-1"
+              >
+                Total
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                <span id="total-BTC-value">0</span> BTC = $<span
+                  id="total-USDT-value"
+                  >0</span
+                >
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card shadow mb-4 mt-3">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">
+        DataTable
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col">Exchange</th>
+              <th scope="col">Total BTC</th>
+              <th scope="col">Total USDT</th>
+              <th scope="col">PNL BTC</th>
+              <th scope="col">PNL USDT</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for exchange in profile_data|get_exchanges %}
+            <tr>
+              <th scope="row">{{exchange}}</th>
+              <td id="total-{{exchange}}-BTC-values">0</td>
+              <td id="total-{{exchange}}-USDT-values">0</td>
+              <td id="total-{{exchange}}-BTC-pnl">0</td>
+              <td id="total-{{exchange}}-USDT-pnl">0</td>
+            </tr>
+            {% endfor%}
+            <tr>
+              <th scope="row">Total:</th>
+              <td id="total-BTC-values">0</td>
+              <td id="total-USDT-values">0</td>
+              <td id="total-BTC-pnl">0</td>
+              <td id="total-USDT-pnl">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <h1 class="h3 mb-2 text-gray-800">Filters</h1>
+  <div class="filter filter-basic mt-3 mb-4">
+    <div class="filter-nav">
+      <button
+        class="btn btn-outline-primary btn-sm active"
+        name="filterBtn"
+        id="all"
+      >
+        All time
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm ml-4"
+        name="filterBtn"
+        id="week"
+      >
+        This week
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        name="filterBtn"
+        id="month"
+      >
+        This month
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        name="filterBtn"
+        id="thirty"
+      >
+        Last 30 days
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm ml-4"
+        data-toggle="datepicker"
+        id="from"
+        name="filterBtn"
+      >
+        From
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        data-toggle="datepicker"
+        id="to"
+        name="filterBtn"
+      >
+        To
+      </button>
+    </div>
+    <div class="mt-3">
+      {% for exchange in profile_data|get_exchanges_details %}
+        <div class="custom-control custom-checkbox mr-sm-2">
+          <input type="checkbox" class="custom-control-input" id="{{exchange|get_item:'name'}}-checkbox-filter" name="switch-exchanges-chart" data-id="{{exchange|get_item:'id'}}" checked />
+          <label class="custom-control-label" for="{{exchange|get_item:'name'}}-checkbox-filter">{{exchange|get_item:'name'}}</label>
+        </div>
+      {% endfor%}
+    </div>
+    <button class="btn btn-success mt-3" onclick="applyFilters()">
+      <span class="text">Apply</span>
+    </button>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">PNL %</h6>
+        </div>
+        <div class="card-body">
+          <select class="custom-select" id="selectBenchmark">
+            <option value="PNL BTC" selected>PNL BTC</option>
+            <option value="PNL USDT">PNL USDT</option>
+          </select>
+          <div id="container" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">PNL</h6>
+        </div>
+        <div class="card-body">
+          <select class="custom-select" id="selectBenchmarkPnl">
+            <option value="PNL BTC" selected>PNL BTC</option>
+            <option value="PNL USDT">PNL USDT</option>
+          </select>
+          <div id="containerPnl" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Asset allocation</h6>
+        </div>
+        <div class="card-body">
+          <div
+            class="text-center"
+            id="assetAllocationLoader"
+            style="display: block;"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div
+            id="assetAllocationChart"
+            style="width: 100%; height: 100%;"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <h1 class="h3 mb-2 text-gray-800">Details</h1>
+  <div class="mb-4">
+    {% for exchange in profile_data %}
+    <div class="custom-control custom-radio">
+      <input
+        type="radio"
+        class="custom-control-input"
+        id="{{exchange|get_name}}Switcher"
+        name="exchange-switch"
+        required
+      />
+      <label class="custom-control-label" for="{{exchange|get_name}}Switcher" name="exchange-switch">{{exchange|get_name}}</label>
+    </div>
+    {% endfor %}
+  </div>
+  {% for exchange in profile_data %}
+    <div class="{{exchange|get_name}}-table" style="display:none" data-id="{{exchange|get_item:'id'}}">
+      <div class="text-center mb-4" id="{{exchange|get_name}}InitialLoader" style="display: block;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+  {% endfor%}
+</div>
+{% endblock %}
+
+{% load static %}
+{% block script %}
+  <script src="{% static 'js/get_datas.js' %}"></script>
+{% endblock script %}
